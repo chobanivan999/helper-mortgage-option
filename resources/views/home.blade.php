@@ -133,6 +133,24 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    <div class="m-1">
+                        <button class="btn btn-success" id="downloadBtn">Download Excel File</button>
+                    </div>
+                    <table class="table" id="bank_tbl">
+                        <thead class="table-dark">
+                            <tr>
+                                <th width="150px">Bank</th>
+                                <th>Rate Type</th>
+                                <th>Lock In</th>
+                                <th>Interest Rate</th>
+                                <th>Monthly Installments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

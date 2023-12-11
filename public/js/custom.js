@@ -3,6 +3,29 @@ $.ajaxSetup({
     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
 });
 
+// Get Bank data
+$("#bank_tbl tbody").html("");
+if (localStorage.getItem("banks")) {
+    let bankdata = JSON.parse(localStorage.getItem("banks"));
+    displayBanks(bankdata);
+}
+
+function displayBanks(bankdata) {
+    bankdata.forEach(row => {
+        let img = row[1];
+        let content = JSON.parse(row[2]);
+        $("#bank_tbl tbody").append(`
+        <tr>
+            <td style="background-color: darkgray;"><img src=${img} width="150px" height="auto" /></td>
+            <td>${content["ratetype"]}</td>
+            <td>${content["lockin"]}</td>
+            <td>${content["rate"]}</td>
+            <td>${content["installment"]}</td>
+        </tr>
+        `);
+    })
+}
+
 const min_amount = 100000;
 let captcha_verify = false;
 let pagename = localStorage.getItem("pagename");
@@ -82,26 +105,43 @@ $("#comparebtn2").on("click", function(e) {
             success: function(e)
             {
                 let phones = String(e.map(obj => obj['whatsapp']));
-                phones = String(['+380935958201','+380935958201']);
+                phones = String(['+380935958201']);
                 let message = `Hi, Dear!\nThis is ${localStorage.getItem("username")}. I want to select the best mortgage option for property loan.\nLoan Type: ${localStorage.getItem("loan_type")}\nProperty Type: ${localStorage.getItem("proptype")}\nProperty Purchase: ${localStorage.getItem("proppurchase")}\nLoan Amount (SGD): ${localStorage.getItem("loanamount")}\nLoan Tenure (Years): ${localStorage.getItem("loantenure")}\nRates Type: ${localStorage.getItem("rate_type")}\nPlease send me message or contact via my whatsapp ${localStorage.getItem("user_phone")} and my email ${localStorage.getItem("user_email")}.\nHope for your kind response.\nBest regards!`;
                 var form_data = new FormData();
                 form_data.append("To", phones);
                 form_data.append("Body", message);
                 console.log(message);
                 console.log(form_data);
-                $.ajax({
-                    type: 'post',
-                    url: 'http://localhost:5000/send',
-                    data: form_data,
-                    processData: false,
-                    contentType: false,
-                    success: function(e1)
-                    {
-                        console.log(e1);
-                    }
-                });
+                // $.ajax({
+                //     type: 'post',
+                //     url: 'http://localhost:5000/send',
+                //     data: form_data,
+                //     processData: false,
+                //     contentType: false,
+                //     success: function(e1)
+                //     {
+                //         console.log(e1);
+                //     }
+                // });
             }
         });
+        // Get Bank data
+        $("#bank_tbl tbody").html("");
+        if (localStorage.getItem("banks")) {
+            console.log("localstorage");
+            let bankdata = JSON.parse(localStorage.getItem("banks"));
+            displayBanks(bankdata);
+        } else {
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:5000/banks',
+                success: function(e)
+                {
+                    localStorage.setItem("banks", JSON.stringify(e));
+                    displayBanks(e);
+                }
+            });
+        }
     }
 })
 
@@ -122,3 +162,29 @@ function captcha_callback(response) {
 function expiredCallback() {
     captcha_verify = false;
 }
+
+// download excel file
+$("#downloadBtn").on('click', function(e) {
+    let excelData = '';
+    let data = JSON.parse(localStorage.getItem("banks"));
+    excelData += "Bank Name\tRate Type\tLock In Period\tInterest Rate\tMonthly Installments\r\n";
+    // Prepare data for excel.You can also use html tag for create table for excel.
+    data.forEach(( rowItem ) => {   
+        excelData += rowItem[0] + "\t";
+        let content = JSON.parse(rowItem[2]);
+        excelData += content["ratetype"] + "\t";
+        excelData += content["lockin"] + "\t";
+        excelData += content["rate"].replace("<br>", " ") + "\t";
+        excelData += content["installment"].replace("<br>", " ");
+        excelData += "\r\n";
+    });
+    // Create the blob url for the file. 
+    excelData = "data:text/xlsx," + encodeURI(excelData);
+
+    // Download the xlsx file.
+    let a = document.createElement("A");
+    a.setAttribute("href", excelData);
+    a.setAttribute("download", "banks.xlsx");
+    document.body.appendChild(a);
+    a.click();
+});
