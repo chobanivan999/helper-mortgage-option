@@ -1,0 +1,20 @@
+.loanbg {
+    background-image: linear-gradient(rgba(68, 68, 68, 0.205),rgba(5, 8, 24, 0.123)),url(/img/bg1.jpg) !important;
+    background-repeat: no-repeat;
+}
+
+.info_kept {
+    color: gray; 
+    text-shadow: none; 
+    font-size: 16px; 
+    text-align: center;
+}
+.card_hide {
+    display: none;
+}
+.mainpart{
+    background-color: #f8f5f046;
+}
+.goback {
+    cursor: pointer;
+}
