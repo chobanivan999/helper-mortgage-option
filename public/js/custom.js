@@ -185,7 +185,7 @@ $("#comparebtn2").on("click", function(e) {
                 console.log(form_data);
                 $.ajax({
                     type: 'post',
-                    url: 'http://localhost:5000/send',
+                    url: 'https://whatsapp-message-app.azurewebsites.net/send',
                     data: form_data,
                     processData: false,
                     contentType: false,
@@ -204,7 +204,7 @@ $("#comparebtn2").on("click", function(e) {
         } else {
             $.ajax({
                 type: 'get',
-                url: 'http://localhost:5000/banks',
+                url: 'https://whatsapp-message-app.azurewebsites.net/banks',
                 success: function(e)
                 {
                     localStorage.setItem("banks", JSON.stringify(e));
