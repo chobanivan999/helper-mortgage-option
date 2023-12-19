@@ -11,31 +11,47 @@
                     <div class="mb-3 mt-3">
                         <label for="loantype" class="form-label"><b>Loan Type</b></label>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="loantype_radio" value="New Loan" checked>New Loan
+                            <input type="radio" class="form-check-input" id="newloan_radio" name="loantype_radio" value="New Purchase" checked>New Purchase
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="loantype_radio" value="Refinance">Refinance
+                            <input type="radio" class="form-check-input" id="refinance_radio" name="loantype_radio" value="Refinance">Refinance
+                        </div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div class="curr_bank card_hide">
+                            <label class="form-label"><b>Current Bank</b></label>
+                            <table class="table" id="currbank_tbl">
+                                <tbody>
+                                    <tr>
+                                        <th class="text-center align-middle"></th>
+                                        <th class="text-center align-middle"></th>
+                                        <th class="text-center align-middle"></th>
+                                        <th class="text-center align-middle"></th>
+                                        <th class="text-center align-middle"></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="curr_rate card_hide">
+                            <label class="form-label"><b>Current Rate</b></label>
+                            <div class="form-group row">
+                                <div class="col-11">
+                                    <input type="number" class="form-control" min="0" max="100" id="current_rate" />
+                                </div>
+                                <div class="col-1"><b class="align-middle">%</b></div>
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3 mt-3">
                         <label for="proptype" class="form-label"><b>Property Type</b></label>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="proptype_radio" value="Private Residential" checked>Private Residential
+                            <input type="radio" class="form-check-input" name="proptype_radio" value="Pte Residential" checked>Pte Residential
                         </div>
                         <div class="form-check">
                             <input type="radio" class="form-check-input" name="proptype_radio" value="HDB">HDB
                         </div>
                         <div class="form-check">
                             <input type="radio" class="form-check-input" name="proptype_radio" value="Commercial">Commercial
-                        </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <label for="proppurchase" class="form-label"><b>Property Purchase</b></label>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="purchase_radio" value="Yes" checked>Yes
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="purchase_radio" value="No">No
                         </div>
                     </div>
                     <div class="mb-3 mt-3">
@@ -54,6 +70,37 @@
                         </span>
                     </div>
                     <button class="btn btn-primary" id="comparebtn1" disabled>COMPARE RATES</button>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="bankmodal" tabindex="-1" aria-labelledby="bankmodallabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="bankmodallabel">Select the existing bank</h1>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-hover banktbl">
+                            @foreach($banks as $bank)
+                            <tr onclick="existingBank(this)">
+                                <th class="row">
+                                    <div class="col-4">
+                                        <img src="{{$bank->image}}" class="bank_img" 
+                                            rate="{{$bank->rate}}" 
+                                            ratetype="{{$bank->ratetype}}" 
+                                            lockin="{{$bank->lockin}}" 
+                                            installment="{{$bank->installment}}" 
+                                        />
+                                    </div>
+                                    <div class="col-8">
+                                        {{$bank->name}}
+                                    </div>
+                                </th>
+                            </tr>
+                            @endforeach
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card step2 card_hide">
@@ -106,38 +153,15 @@
             </div>
         </div>
         <div class="col-md-12">
-            <div class="m-4 p-5 bg-default rounded thankyou card_hide">
+            <div class="pt-4 mt-4 bg-default rounded thankyou card_hide">
                 <h1>Thank you for your enquiry.</h1>
                 <p>We are processing your entry to provide an accurate quote for you ASAP.</p>
                 <!-- <p>Please check the table below on prevailing rates updated weekly. The monthly instalments are calculated assuming a <b>$100,000 loan over 30 years</b>. The wide range of rates are for all types of properties such as HDB, private residential and commercial property for both personal and business use.</p> -->
                 <p>We sent your enquiry message via Whatsapp to bellow advisors of the several banks.</p>
                 <p>We will get back to you to advise on the best deal available for your property.</p>
                 <br>
-                <table class="table">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>No</th>
-                            <th>Bank</th>
-                            <th>Advisor</th>
-                            <th>Whatsapp</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($contacts as $contact)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $contact->bankname }}</td>
-                            <td>{{ $contact->name }}</td>
-                            <td>{{ $contact->whatsapp }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <div class="mt-3">
-                    <div class="m-1">
-                        <button class="btn btn-success" id="downloadBtn">Download Excel File</button>
-                    </div>
-                    <table class="table" id="bank_tbl">
+                <div class="mt-3 bank_tbl">
+                    <table class="table text-center align-middle" id="bank_tbl">
                         <thead class="table-dark">
                             <tr>
                                 <th width="150px">Bank</th>

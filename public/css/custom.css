@@ -18,3 +18,20 @@
 .goback {
     cursor: pointer;
 }
+.bank_img {
+    width: 100px;
+    max-height: 40px;
+}
+.banktbl tr th{
+    background-color: #8499908f;
+    cursor: pointer;
+}
+.curr_bank {
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    table {
+      font-size: 12px;
+    }
+}

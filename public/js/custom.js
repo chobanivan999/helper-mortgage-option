@@ -11,19 +11,77 @@ if (localStorage.getItem("banks")) {
 }
 
 function displayBanks(bankdata) {
-    bankdata.forEach(row => {
-        let img = row[1];
-        let content = JSON.parse(row[2]);
-        $("#bank_tbl tbody").append(`
-        <tr>
-            <td style="background-color: darkgray;"><img src=${img} width="150px" height="auto" /></td>
-            <td>${content["ratetype"]}</td>
-            <td>${content["lockin"]}</td>
-            <td>${content["rate"]}</td>
-            <td>${content["installment"]}</td>
-        </tr>
-        `);
-    })
+    let rate_type = localStorage.getItem("rate_type");
+    let resdata = [];
+    if (rate_type == "Fixed") {
+        bankdata.forEach(row => {
+            let content = JSON.parse(row[2]);
+            if (content["ratetype"][0] == "F") {
+                resdata.push(row);
+            }
+        });
+    } else if (rate_type == "Floating") {
+        bankdata.forEach(row => {
+            let content = JSON.parse(row[2]);
+            if (content["ratetype"][0] != "F") {
+                resdata.push(row);
+            }
+        });
+    } else {
+        resdata = bankdata;
+    }
+
+    if (resdata.length > 3) {
+        resdata = resdata.slice(0, 3);
+    }
+
+    if (localStorage.getItem("loan_type") == "New Purchase") {
+        resdata.forEach(row => {
+            let name = row[0];
+            let img = row[1];
+            let content = JSON.parse(row[2]);
+            if (name != localStorage.getItem("curr_bank")) {
+                $("#bank_tbl tbody").append(`
+                <tr>
+                    <td>
+                        <img src=${img} 
+                        style="width: 150px; max-height:80px; background-color: #80808040;" 
+                        class="img-thumbnail" />
+                    </td>
+                    <td>${content["ratetype"]}</td>
+                    <td>${content["lockin"]}</td>
+                    <td>${content["rate"]}</td>
+                    <td>${content["installment"]}</td>
+                </tr>
+                `);
+            }
+        })
+    } else if (localStorage.getItem("loan_type") == "Refinance") {
+        $("#bank_tbl thead tr").append("<th>Saving</th>");
+        resdata.forEach(row => {
+            let name = row[0];
+            let img = row[1];
+            let content = JSON.parse(row[2]);
+            let bank_rate = Number(content["rate"].split("<br>")[0].replace("%"," "));
+            let saving = Number(localStorage.getItem("loanamount") * (Number(localStorage.getItem("curr_rate")) - bank_rate) * 0.01 * Number(localStorage.getItem("loantenure")))
+            if (name != localStorage.getItem("curr_bank")) {
+                $("#bank_tbl tbody").append(`
+                <tr>
+                    <td>
+                        <img src=${img} 
+                        style="width: 150px; max-height:80px; background-color: #80808040;" 
+                        class="img-thumbnail" />
+                    </td>
+                    <td>${content["ratetype"]}</td>
+                    <td>${content["lockin"]}</td>
+                    <td>${content["rate"]}</td>
+                    <td>${content["installment"]}</td>
+                    <td style="background-color: skyblue;">$${saving}</td>
+                </tr>
+                `);
+            }
+        })
+    }
 }
 
 const min_amount = 100000;
@@ -54,6 +112,7 @@ function firststep() {
         $(`.${page}`).hide();
     });
     $('.step1').show();
+    localStorage.clear();
     localStorage.setItem("pagename", "step1");
 }
 $("#navbrand").on('click', function(e) {
@@ -64,13 +123,15 @@ $("#navbrand").on('click', function(e) {
 $("#comparebtn1").on('click', function(e) {
     let loan_type = $("input[name='loantype_radio']:checked").val();
     let proptype = $("input[name='proptype_radio']:checked").val();
-    let proppurchase = $("input[name='purchase_radio']:checked").val();
+    let curr_bank = $(".curr_bank").attr("bankname");
+    let curr_rate = $("#current_rate").val();
     let loanamount = $("#loanamount").val();
     let loantenure = $("#loantenure").val();
-    if ($("#terms-chk").is(':checked') && loan_type && proptype && proppurchase && loanamount >= min_amount && loantenure > 0) {
+    if ($("#terms-chk").is(':checked') && loan_type && proptype && loanamount >= min_amount && loantenure > 0) {
         localStorage.setItem("loan_type", loan_type);
         localStorage.setItem("proptype", proptype);
-        localStorage.setItem("proppurchase", proppurchase);
+        localStorage.setItem("curr_bank", curr_bank);
+        localStorage.setItem("curr_rate", curr_rate);
         localStorage.setItem("loanamount", loanamount);
         localStorage.setItem("loantenure", loantenure);
         console.log(localStorage);
@@ -106,29 +167,28 @@ $("#comparebtn2").on("click", function(e) {
             {
                 let phones = String(e.map(obj => obj['whatsapp']));
                 phones = String(['+380935958201']);
-                let message = `Hi, Dear!\nThis is ${localStorage.getItem("username")}. I want to select the best mortgage option for property loan.\nLoan Type: ${localStorage.getItem("loan_type")}\nProperty Type: ${localStorage.getItem("proptype")}\nProperty Purchase: ${localStorage.getItem("proppurchase")}\nLoan Amount (SGD): ${localStorage.getItem("loanamount")}\nLoan Tenure (Years): ${localStorage.getItem("loantenure")}\nRates Type: ${localStorage.getItem("rate_type")}\nPlease send me message or contact via my whatsapp ${localStorage.getItem("user_phone")} and my email ${localStorage.getItem("user_email")}.\nHope for your kind response.\nBest regards!`;
+                let message = `Hi, Dear!\nThis is ${localStorage.getItem("username")}. I want to select the best mortgage option for property loan.\nLoan Type: ${localStorage.getItem("loan_type")}\nProperty Type: ${localStorage.getItem("proptype")}\nLoan Amount (SGD): ${localStorage.getItem("loanamount")}\nLoan Tenure (Years): ${localStorage.getItem("loantenure")}\nRates Type: ${localStorage.getItem("rate_type")}\nPlease send me message or contact via my whatsapp ${localStorage.getItem("user_phone")} and my email ${localStorage.getItem("user_email")}.\nHope for your kind response.\nBest regards!`;
                 var form_data = new FormData();
                 form_data.append("To", phones);
                 form_data.append("Body", message);
                 console.log(message);
                 console.log(form_data);
-                // $.ajax({
-                //     type: 'post',
-                //     url: 'http://localhost:5000/send',
-                //     data: form_data,
-                //     processData: false,
-                //     contentType: false,
-                //     success: function(e1)
-                //     {
-                //         console.log(e1);
-                //     }
-                // });
+                $.ajax({
+                    type: 'post',
+                    url: 'http://localhost:5000/send',
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function(e1)
+                    {
+                        console.log(e1);
+                    }
+                });
             }
         });
         // Get Bank data
         $("#bank_tbl tbody").html("");
         if (localStorage.getItem("banks")) {
-            console.log("localstorage");
             let bankdata = JSON.parse(localStorage.getItem("banks"));
             displayBanks(bankdata);
         } else {
@@ -163,28 +223,35 @@ function expiredCallback() {
     captcha_verify = false;
 }
 
-// download excel file
-$("#downloadBtn").on('click', function(e) {
-    let excelData = '';
-    let data = JSON.parse(localStorage.getItem("banks"));
-    excelData += "Bank Name\tRate Type\tLock In Period\tInterest Rate\tMonthly Installments\r\n";
-    // Prepare data for excel.You can also use html tag for create table for excel.
-    data.forEach(( rowItem ) => {   
-        excelData += rowItem[0] + "\t";
-        let content = JSON.parse(rowItem[2]);
-        excelData += content["ratetype"] + "\t";
-        excelData += content["lockin"] + "\t";
-        excelData += content["rate"].replace("<br>", " ") + "\t";
-        excelData += content["installment"].replace("<br>", " ");
-        excelData += "\r\n";
-    });
-    // Create the blob url for the file. 
-    excelData = "data:text/xlsx," + encodeURI(excelData);
-
-    // Download the xlsx file.
-    let a = document.createElement("A");
-    a.setAttribute("href", excelData);
-    a.setAttribute("download", "banks.xlsx");
-    document.body.appendChild(a);
-    a.click();
+// Choose loan type
+$("#newloan_radio").on("click", function(e) {
+    $(".curr_bank").hide();
+    $(".curr_rate").hide();
+    $(".curr_bank").attr("bankname", "");
 });
+
+$("#refinance_radio").on('click', function(e) {
+    $("#bankmodal").modal('show');
+});
+
+// Choose existing bank
+function existingBank(e) {
+    let row = e.children[0].children;
+    let img = row[0].children[0].getAttribute("src");
+    let name  = row[1].innerText;
+    $(".curr_bank").attr("bankname", name);
+    $(".curr_bank").show();
+    $(".curr_rate").val(0);
+    $(".curr_rate").show();
+    let trs = $("#currbank_tbl tbody tr").children();
+    trs[0].innerHTML = '<img src='+img+' style="width: 200px; max-height:80px; background-color: #80808040;" class="img-thumbnail" />';
+    trs[1].innerHTML = row[0].children[0].getAttribute("ratetype");
+    trs[2].innerHTML = row[0].children[0].getAttribute("lockin");
+    trs[3].innerHTML = row[0].children[0].getAttribute("rate");
+    trs[4].innerHTML = row[0].children[0].getAttribute("installment");
+    $("#bankmodal").modal('hide');
+
+    $(".curr_bank").on('click', function() {
+        $("#bankmodal").modal('show');
+    });
+}
