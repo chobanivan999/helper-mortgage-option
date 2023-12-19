@@ -36,6 +36,9 @@ function displayBanks(bankdata) {
     }
 
     if (localStorage.getItem("loan_type") == "New Purchase") {
+        if ($("#bank_tbl thead tr th").length == 6) {
+            $("#bank_tbl thead tr th")[5].remove();
+        }
         resdata.forEach(row => {
             let name = row[0];
             let img = row[1];
@@ -57,13 +60,20 @@ function displayBanks(bankdata) {
             }
         })
     } else if (localStorage.getItem("loan_type") == "Refinance") {
-        $("#bank_tbl thead tr").append("<th>Saving</th>");
+        if ($("#bank_tbl thead tr th").length == 5) {
+            $("#bank_tbl thead tr").append("<th>Saving</th>");
+        }
         resdata.forEach(row => {
             let name = row[0];
             let img = row[1];
             let content = JSON.parse(row[2]);
             let bank_rate = Number(content["rate"].split("<br>")[0].replace("%"," "));
-            let saving = Number(localStorage.getItem("loanamount") * (Number(localStorage.getItem("curr_rate")) - bank_rate) * 0.01 * Number(localStorage.getItem("loantenure")))
+            let saving = Math.round(localStorage.getItem("loanamount") * (Number(localStorage.getItem("curr_rate")) - bank_rate) * 0.01 * Number(localStorage.getItem("loantenure")))
+            if (saving < 0) {
+                saving = "-$" + Math.abs(saving); 
+            } else {
+                saving = "$" + saving;
+            }
             if (name != localStorage.getItem("curr_bank")) {
                 $("#bank_tbl tbody").append(`
                 <tr>
@@ -76,7 +86,7 @@ function displayBanks(bankdata) {
                     <td>${content["lockin"]}</td>
                     <td>${content["rate"]}</td>
                     <td>${content["installment"]}</td>
-                    <td style="background-color: skyblue;">$${saving}</td>
+                    <td style="background-color: skyblue;">${saving}</td>
                 </tr>
                 `);
             }
