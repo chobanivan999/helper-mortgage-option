@@ -20,25 +20,15 @@
                     <div class="mb-3 mt-3">
                         <div class="curr_bank card_hide">
                             <label class="form-label"><b>Current Bank</b></label>
-                            <table class="table" id="currbank_tbl">
-                                <tbody>
-                                    <tr>
-                                        <th class="text-center align-middle"></th>
-                                        <th class="text-center align-middle"></th>
-                                        <th class="text-center align-middle"></th>
-                                        <th class="text-center align-middle"></th>
-                                        <th class="text-center align-middle"></th>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="d-flex justify-content-center" id="currbank_div"></div>
                         </div>
                         <div class="curr_rate card_hide">
                             <label class="form-label"><b>Current Rate</b></label>
-                            <div class="form-group row">
-                                <div class="col-11">
-                                    <input type="number" class="form-control" min="0" max="100" id="current_rate" />
+                            <div class="input-group">
+                                <input type="number" class="form-control" min="0" max="100" id="current_rate" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
                                 </div>
-                                <div class="col-1"><b class="align-middle">%</b></div>
                             </div>
                         </div>
                     </div>
@@ -85,15 +75,10 @@
                             <tr onclick="existingBank(this)">
                                 <th class="row">
                                     <div class="col-4">
-                                        <img src="{{$bank->image}}" class="bank_img" 
-                                            rate="{{$bank->rate}}" 
-                                            ratetype="{{$bank->ratetype}}" 
-                                            lockin="{{$bank->lockin}}" 
-                                            installment="{{$bank->installment}}" 
-                                        />
+                                        <img src="{{$bank['image']}}" class="bank_img" />
                                     </div>
                                     <div class="col-8">
-                                        {{$bank->name}}
+                                        {{$bank['name']}}
                                     </div>
                                 </th>
                             </tr>
@@ -155,10 +140,9 @@
         <div class="col-md-12">
             <div class="pt-4 mt-4 bg-default rounded thankyou card_hide">
                 <h1>Thank you for your enquiry.</h1>
-                <p>We are processing your entry to provide an accurate quote for you ASAP.</p>
-                <!-- <p>Please check the table below on prevailing rates updated weekly. The monthly instalments are calculated assuming a <b>$100,000 loan over 30 years</b>. The wide range of rates are for all types of properties such as HDB, private residential and commercial property for both personal and business use.</p> -->
-                <p>We sent your enquiry message via Whatsapp to bellow advisors of the several banks.</p>
-                <p>We will get back to you to advise on the best deal available for your property.</p>
+                <p>Your enquiry message has been sent to the selected banks below.</p>
+                <p>We will update you with advice on the best package available soonest.</p>
+                <p>Meanwhile, should you have any clarifications, do contact us at <code>+65 80535055</code> or email us at <a href = "mailto: atlasadvisorypl@gmail.com">atlasadvisorypl@gmail.com</a></p>
                 <br>
                 <div class="mt-3 bank_tbl">
                     <table class="table text-center align-middle" id="bank_tbl">
