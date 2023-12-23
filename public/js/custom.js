@@ -191,7 +191,7 @@ $("#comparebtn2").on("click", function(e) {
             success: function(e)
             {
                 let phones = String(e.map(obj => obj['whatsapp']));
-                // phones = String(['+380935958201']);
+                phones = String(['+6580535055']);
                 let message = `Hi, Dear!\nThis is ${localStorage.getItem("username")}. I want to select the best mortgage option for property loan.\nLoan Type: ${localStorage.getItem("loan_type")}\nProperty Type: ${localStorage.getItem("proptype")}\nLoan Amount (SGD): ${localStorage.getItem("loanamount")}\nLoan Tenure (Years): ${localStorage.getItem("loantenure")}\nRates Type: ${localStorage.getItem("rate_type")}\nPlease send me message or contact via my whatsapp ${localStorage.getItem("user_phone")} and my email ${localStorage.getItem("user_email")}.\nHope for your kind response.\nBest regards!`;
                 var form_data = new FormData();
                 form_data.append("To", phones);
