@@ -1,166 +1,265 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card step1 card_hide">
-                <div class="card-header"><h3>What are you looking for?</h3></div>
-                <div class="card-body">
-                    Simply fill in the form below to use our free loan comparison service.
-                    <div class="mb-3 mt-3">
-                        <label for="loantype" class="form-label"><b>Loan Type</b></label>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="newloan_radio" name="loantype_radio" value="New Purchase" checked>New Purchase
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="refinance_radio" name="loantype_radio" value="Refinance">Refinance
-                        </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <div class="curr_bank card_hide">
-                            <label class="form-label"><b>Current Bank</b></label>
-                            <div class="d-flex justify-content-center" id="currbank_div"></div>
-                        </div>
-                        <div class="curr_rate card_hide">
-                            <label class="form-label"><b>Current Rate</b></label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" min="0" max="100" id="current_rate" />
-                                <div class="input-group-append">
-                                    <span class="input-group-text">%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <label for="proptype" class="form-label"><b>Property Type</b></label>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="proptype_radio" value="Pte Residential" checked>Pte Residential
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="proptype_radio" value="HDB">HDB
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="proptype_radio" value="Commercial">Commercial
-                        </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <label for="loanamount" class="form-label"><b>Loan Amount (SGD)</b></label>
-                        <input type="number" class="form-control" id="loanamount" value="100000" min="100000">
-                    </div>
-                    <div class="mb-3">
-                        <label for="loantenure" class="form-label"><b>Loan Tenure (Years)</b></label>
-                        <input type="number" class="form-control" id="loantenure" value="30" min="1">
-                    </div>
-                    <div class="form-check mb-3">
-                        <label class="form-check-label">
-                        <input class="form-check-input" id="terms-chk" type="checkbox">
-                        <span>
-                            I consent to the collection, use and disclosure of my personal data for the purposes set in our <a href="#" id="privacy-link">Privacy Notice</a> as required by the Personal Data Protection Act 2012.
-                        </span>
-                    </div>
-                    <button class="btn btn-primary" id="comparebtn1" disabled>COMPARE RATES</button>
-                </div>
-            </div>
-            <!-- Modal -->
-            <div class="modal fade" id="bankmodal" tabindex="-1" aria-labelledby="bankmodallabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="bankmodallabel">Select the existing bank</h1>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table table-hover banktbl">
-                            @foreach($banks as $bank)
-                            <tr onclick="existingBank(this)">
-                                <th class="row">
-                                    <div class="col-4">
-                                        <img src="{{$bank['image']}}" class="bank_img" />
-                                    </div>
-                                    <div class="col-8">
-                                        {{$bank['name']}}
-                                    </div>
-                                </th>
-                            </tr>
-                            @endforeach
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card step2 card_hide">
-                <div class="card-header"><h3>Step 2 out of 2</h3></div>
-                <div class="card-body">
-                    <div class="mb-3 mt-3">
-                        <label class="form-label">
-                            <b>
-                                Fixed or Floating Rates<br>
-                                (Do you prefer fixed or floating rates?)
-                            </b>
-                        </label>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="rate_radio" value="Fixed and Floating" checked>Both
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="rate_radio" value="Fixed">Fixed
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="rate_radio" value="Floating">Floating
-                        </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <label for="username" class="form-label"><b>Name</b></label>
-                        <input type="text" class="form-control" id="username">
-                    </div>
-                    <div class="mb-3">
-                        <label for="user_email" class="form-label"><b>Email</b></label>
-                        <input type="email" class="form-control" id="user_email">
-                    </div>
-                    <div class="mb-3">
-                        <label for="user_phone" class="form-label"><b>Contact Number</b></label>
-                        <input type="text" class="form-control" id="user_phone">
-                    </div>
-                    <div class="mb-3">
-                        <div class="g-recaptcha" id="g-recaptcha" data-sitekey="{{ config('app.GOOGLE_RECAPTCHA_KEY') }}" data-callback="captcha_callback" data-expired-callback="expiredCallback"></div>
-                        @if ($errors->has('g-recaptcha-response'))
-                            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
-                        @endif
-                    </div>
-                    <div class="mb-3">
-                        <label class="text-primary goback">Go Back</label>
-                    </div>
-                    <button class="btn btn-primary" id="comparebtn2">COMPARE RATES</button>
-                    <div class="m-3">
-                    <p class="info_kept">All information is kept private in accordance with our 
-                    <a href="#" id="accept-link"><span>privacy policy</span></a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="pt-4 mt-4 bg-default rounded thankyou card_hide">
-                <h1>Thank you for your enquiry.</h1>
-                <p>Your enquiry message has been sent to the selected banks below.</p>
-                <p>We will update you with advice on the best package available soonest.</p>
-                <p>Meanwhile, should you have any clarifications, do contact us at <code>+65 80535055</code> or email us at <a href = "mailto: atlasadvisorypl@gmail.com">atlasadvisorypl@gmail.com</a></p>
-                <br>
-                <div class="mt-3 bank_tbl">
-                    <table class="table text-center align-middle" id="bank_tbl">
-                        <thead class="table-dark">
-                            <tr>
-                                <th width="150px">Bank</th>
-                                <th>Rate Type</th>
-                                <th>Lock In</th>
-                                <th>Interest Rate</th>
-                                <th>Monthly Installments</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="image-container set-full-height" style="background-image: url('/img/wizard-book.jpg')">
+
+	    <!--   Big container   -->
+	    <div class="container">
+	        <div class="row">
+		        <div class="col-sm-10 col-sm-offset-1">
+		            <!--      Wizard container        -->
+		            <div class="wizard-container">
+		                <div class="card wizard-card" data-color="green" id="wizardProfile">
+		                    <form action="" method="">
+		                    	<div class="wizard-header">
+		                        	<h3 class="wizard-title">
+										What are you looking for?
+		                        	</h3>
+									<h5>Simply fill in the form below to use our free loan comparison service.</h5>
+		                    	</div>
+								<div class="wizard-navigation">
+									<ul>
+			                            <li><a href="#step1" data-toggle="tab">Step 1</a></li>
+			                            <li><a href="#step2" data-toggle="tab">Step 2</a></li>
+			                            <li><a href="#result" data-toggle="tab">Result</a></li>
+			                        </ul>
+								</div>
+
+		                        <div class="tab-content">
+		                            <div class="tab-pane" id="step1">
+		                                <div class="row">
+		                                	<div class="col-sm-8 col-sm-offset-2">
+                                                <div class="row" style="display: flex; justify-content: space-evenly;">
+                                                    <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center;">Loan Type</div>
+                                                    <div class="col-sm-2">
+                                                        <div class="choice" data-toggle="loantype_radio" rel="tooltip" title="New Purchase">
+                                                        <input type="radio" class="form-check-input" id="newloan_radio" name="loantype_radio" value="New Purchase">
+                                                            <div class="icon">
+                                                                <img src="/img/new_purchase.png" width="40px" style="margin-top: 10px;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <div class="choice" data-toggle="loantype_radio" rel="tooltip" title="Refinance">
+                                                            <input type="radio" class="form-check-input" id="refinance_radio" name="loantype_radio" value="Refinance">
+                                                            <div class="icon">
+                                                                <img src="/img/refinance.png" width="40px" style="margin-top: 10px;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="display: flex; justify-content: space-evenly;">
+                                                    <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center;">Property Type</div>
+                                                    <div class="col-sm-2 row">
+                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Pte Residential">
+                                                            <input type="radio" class="form-check-input" name="proptype_radio" value="Pte Residential">
+                                                            <div class="icon">
+                                                                <img src="/img/private_home.png" width="40px" style="margin-top: 10px;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2 row">
+                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="HDB">
+                                                            <input type="radio" class="form-check-input" name="proptype_radio" value="HDB">
+                                                            <div class="icon">
+                                                                <img src="/img/hdb.png" width="40px" style="margin-top: 10px;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2 row">
+                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Commercial">
+                                                            <input type="radio" class="form-check-input" name="proptype_radio" value="Commercial">
+                                                            <div class="icon">
+                                                                <img src="/img/commercial.png" width="40px" style="margin-top: 10px;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+												<div class="input-group">
+                                                    <div class="curr_bank card_hide">
+                                                        <label class="form-label"><b>Current Bank</b></label>
+                                                        <div class="d-flex justify-content-center" id="currbank_div"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group curr_rate card_hide">
+                                                    <span class="input-group-addon">
+                                                        <i class="material-icons">percent</i>
+                                                    </span>
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Current Rate</label>
+                                                        <input type="number" class="form-control" min="0" max="100" id="current_rate" />
+                                                    </div>
+                                                </div>
+                                                <div class="input-group">
+													<span class="input-group-addon">
+														<i class="material-icons">monetization_on</i>
+													</span>
+													<div class="form-group label-floating">
+			                                          <label class="control-label">Loan Amount (SGD)</label>
+			                                          <input type="number" class="form-control" id="loanamount" name="loanamount" value="100000" min="100000">
+			                                        </div>
+												</div>
+
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="material-icons">calendar_month</i>
+													</span>
+													<div class="form-group label-floating">
+													  <label class="control-label">Loan Tenure (Years)</label>
+													  <input type="number" class="form-control" id="loantenure" name="loantenure" min="1" value="30">
+													</div>
+												</div>
+                                                <div class="input-group">
+													<span class="input-group-addon">
+                                                    <input class="form-check-input" id="terms-chk" name="termschk" type="checkbox">
+													</span>
+													<div class="form-group label-floating">
+                                                    I consent to the collection, use and disclosure of my personal data for the purposes set in our <a href="#" id="privacy-link">Privacy Notice</a> as required by the Personal Data Protection Act 2012.
+													</div>
+												</div>
+		                                	</div>
+		                            	</div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="bankmodal" tabindex="-1" aria-labelledby="bankmodallabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="bankmodallabel">Select the existing bank</h1>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table class="table table-hover banktbl">
+                                                            @foreach($banks as $bank)
+                                                            <tr onclick="existingBank(this)" class="row">
+                                                                <th class="col-sm-6">
+                                                                    <img src="{{$bank['image']}}" class="bank_img" />
+                                                                </th>
+                                                                <th class="col-sm-6">
+                                                                    {{$bank['name']}}
+                                                                </th>
+                                                            </tr>
+                                                            @endforeach
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+		                            </div>
+		                            <div class="tab-pane" id="step2">
+		                                <div class="row">
+                                            <div class="col-sm-10 col-sm-offset-1">
+                                                <div class="row" style="display: flex; justify-content: space-evenly;">
+                                                    <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center;">Rate Type</div>
+                                                    <div class="col-sm-2 row">
+                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Both">
+                                                            <input type="radio" class="form-check-input" name="rate_radio" value="Fixed and Floating">
+                                                            <div class="icon">
+                                                                <img src="/img/both_rate.png" width="40px" style="margin-top: 10px;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2 row">
+                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Fixed">
+                                                            <input type="radio" class="form-check-input" name="rate_radio" value="Fixed">
+                                                            <div class="icon">
+                                                                <img src="/img/fixed_rate.png" width="40px" style="margin-top: 10px;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2 row">
+                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Floating">
+                                                            <input type="radio" class="form-check-input" name="rate_radio" value="Floating">
+                                                            <div class="icon">
+                                                                <img src="/img/floating_rate.png" width="40px" style="margin-top: 10px;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group">
+													<span class="input-group-addon">
+														<i class="material-icons">face</i>
+													</span>
+													<div class="form-group label-floating">
+			                                          <label class="control-label">Name</label>
+			                                          <input type="text" class="form-control" id="username" name="username">
+			                                        </div>
+												</div>
+                                                <div class="input-group">
+													<span class="input-group-addon">
+														<i class="material-icons">email</i>
+													</span>
+													<div class="form-group label-floating">
+			                                          <label class="control-label">Email</label>
+			                                          <input type="email" class="form-control" id="user_email" name="user_email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+			                                        </div>
+												</div>
+                                                <div class="input-group">
+													<span class="input-group-addon">
+														<i class="material-icons">phone</i>
+													</span>
+													<div class="form-group label-floating">
+			                                          <label class="control-label">Contact Number</label>
+			                                          <input type="text" class="form-control" id="user_phone" name="user_phone">
+			                                        </div>
+												</div>
+                                                <div class="input-group">
+													<div class="form-group label-floating">
+                                                        <div class="g-recaptcha" id="g-recaptcha" data-sitekey="{{ config('app.GOOGLE_RECAPTCHA_KEY') }}" data-callback="captcha_callback" data-expired-callback="expiredCallback"></div>
+                                                        @if ($errors->has('g-recaptcha-response'))
+                                                            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                                        @endif
+			                                        </div>
+												</div>
+		                                    </div>
+		                                </div>
+		                            </div>
+		                            <div class="tab-pane" id="result">
+		                                <div class="row">
+                                        <div class="col-sm-10 col-sm-offset-1">
+                                            <h3>Thank you for your enquiry.</h3>
+                                            <p>Your enquiry message has been sent to the selected banks below.</p>
+                                            <p>We will update you with advice on the best package available soonest.</p>
+                                            <p>Meanwhile, should you have any clarifications, do contact us at <code>+65 80535055</code> or email us at <a href = "mailto: atlasadvisorypl@gmail.com">atlasadvisorypl@gmail.com</a></p>
+                                            <br>
+                                            <div class="mt-3 bank_tbl">
+                                                <table class="table text-center align-middle" id="bank_tbl">
+                                                    <thead class="table-dark">
+                                                        <tr>
+                                                            <th width="150px">Bank</th>
+                                                            <th>Rate Type</th>
+                                                            <th>Lock In</th>
+                                                            <th>Interest Rate</th>
+                                                            <th>Monthly Installments</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                        <div class="wizard-footer">
+		                            <div class="pull-right">
+		                                <input type='button' class='btn btn-next btn-fill btn-success btn-wd' name='next' value='Compare Rates' id="comparebtn" disabled />
+		                            </div>
+
+		                            <div class="pull-left">
+		                                <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+		                            </div>
+		                            <div class="clearfix"></div>
+		                        </div>
+		                    </form>
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	        </div><!-- end row -->
+	    </div> <!--  big container -->
+
+	    <div class="footer">
+	        <div class="container text-center">
+	             2024
+	        </div>
+	    </div>
+	</div>
 @endsection

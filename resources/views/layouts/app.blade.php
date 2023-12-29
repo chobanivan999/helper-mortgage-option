@@ -11,37 +11,37 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!--     Fonts and icons     -->
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+
+	<!-- CSS Files -->
+	<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
+	<link href="{{ asset('css/material-bootstrap-wizard.css') }}" rel="stylesheet" />
+
+	<!-- CSS Just for demo purpose, don't include it in your project -->
+	<link href="{{ asset('css/demo.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.png') }}">
     <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body class="loanbg">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" id="navbrand" href="#">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-                    </ul>
-                </div>
-            </div>
-        </nav>
 
         <main class="py-4 mainpart">
             @yield('content')
         </main>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
+    <!--   Core JS Files   -->
+    <script src="{{ asset('js/jquery-2.2.4.min.js') }}" type="text/javascript"></script>
+	<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
+	<script src="{{ asset('js/jquery.bootstrap.js') }}" type="text/javascript"></script>
+
+	<!--  Plugin for the Wizard -->
+	<script src="{{ asset('js/material-bootstrap-wizard.js') }}"></script>
+
+    <!--  More information about jquery.validate here: http://jqueryvalidation.org/	 -->
+	<script src="{{ asset('js/jquery.validate.min.js') }}"></script>
+    <!-- <script src="{{ asset('js/custom.js') }}"></script> -->
 </body>
 </html>

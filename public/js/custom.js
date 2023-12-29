@@ -127,9 +127,9 @@ if (pagename) {
 // terms checkbox event
 $("#terms-chk").on('click', function(e) {
     if ($(this).is(':checked')) {
-        $("#comparebtn1").attr('disabled', false);
+        $("#comparebtn").attr('disabled', false);
     } else {
-        $("#comparebtn1").attr('disabled', true);
+        $("#comparebtn").attr('disabled', true);
     }
 })
 
@@ -147,7 +147,7 @@ $("#navbrand").on('click', function(e) {
 })
 
 // submit first step
-$("#comparebtn1").on('click', function(e) {
+$("#comparebtn").on('click', function(e) {
     let loan_type = $("input[name='loantype_radio']:checked").val();
     let proptype = $("input[name='proptype_radio']:checked").val();
     let curr_bank = $(".curr_bank").attr("bankname");
