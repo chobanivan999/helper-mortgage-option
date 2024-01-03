@@ -28,50 +28,55 @@
 		                        <div class="tab-content">
 		                            <div class="tab-pane" id="step1">
 		                                <div class="row">
-		                                	<div class="col-sm-8 col-sm-offset-2">
+		                                	<div class="col-sm-10 col-sm-offset-1">
                                                 <div class="row" style="display: flex; justify-content: space-evenly;">
-                                                    <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center;">Loan Type</div>
-                                                    <div class="col-sm-2">
+                                                    <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center; justify-content: center;">Loan Type</div>
+                                                    <div class="col-sm-3">
                                                         <div class="choice" data-toggle="loantype_radio" rel="tooltip" title="New Purchase">
-                                                        <input type="radio" class="form-check-input" id="newloan_radio" name="loantype_radio" value="New Purchase">
+                                                            <input type="radio" class="form-check-input" id="newloan_radio" name="loantype_radio" value="New Purchase">
                                                             <div class="icon">
                                                                 <img src="/img/new_purchase.png" width="40px" style="margin-top: 10px;" />
                                                             </div>
+                                                            <h6>New Purchase</h6>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-2">
+                                                    <div class="col-sm-3">
                                                         <div class="choice" data-toggle="loantype_radio" rel="tooltip" title="Refinance">
                                                             <input type="radio" class="form-check-input" id="refinance_radio" name="loantype_radio" value="Refinance">
                                                             <div class="icon">
                                                                 <img src="/img/refinance.png" width="40px" style="margin-top: 10px;" />
                                                             </div>
+                                                            <h6>Refinance</h6>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="display: flex; justify-content: space-evenly;">
-                                                    <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center;">Property Type</div>
-                                                    <div class="col-sm-2 row">
+                                                    <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center;     justify-content: flex-end;">Property Type</div>
+                                                    <div class="col-sm-3 row">
                                                         <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Pte Residential">
                                                             <input type="radio" class="form-check-input" name="proptype_radio" value="Pte Residential">
                                                             <div class="icon">
                                                                 <img src="/img/private_home.png" width="40px" style="margin-top: 10px;" />
                                                             </div>
+                                                            <h6>Pte Residential</h6>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-2 row">
+                                                    <div class="col-sm-3 row">
                                                         <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="HDB">
                                                             <input type="radio" class="form-check-input" name="proptype_radio" value="HDB">
                                                             <div class="icon">
                                                                 <img src="/img/hdb.png" width="40px" style="margin-top: 10px;" />
                                                             </div>
+                                                            <h6>HDB</h6>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-2 row">
+                                                    <div class="col-sm-3 row">
                                                         <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Commercial">
                                                             <input type="radio" class="form-check-input" name="proptype_radio" value="Commercial">
                                                             <div class="icon">
                                                                 <img src="/img/commercial.png" width="40px" style="margin-top: 10px;" />
                                                             </div>
+                                                            <h6>Commercial</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -120,11 +125,14 @@
 		                                	</div>
 		                            	</div>
                                         <!-- Modal -->
-                                        <div class="modal fade" id="bankmodal" tabindex="-1" aria-labelledby="bankmodallabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+                                        <div class="modal fade" id="bankmodal" tabindex="-1" aria-labelledby="bankmodallabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="bankmodallabel">Select the existing bank</h1>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <h3 class="modal-title fs-5" id="bankmodallabel">Select the existing bank</h3>
                                                     </div>
                                                     <div class="modal-body">
                                                         <table class="table table-hover banktbl">
@@ -150,27 +158,30 @@
                                                 <div class="row" style="display: flex; justify-content: space-evenly;">
                                                     <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center;">Rate Type</div>
                                                     <div class="col-sm-2 row">
-                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Both">
+                                                        <div class="choice" data-toggle="rate_radio" rel="tooltip" title="Both">
                                                             <input type="radio" class="form-check-input" name="rate_radio" value="Fixed and Floating">
                                                             <div class="icon">
                                                                 <img src="/img/both_rate.png" width="40px" style="margin-top: 10px;" />
                                                             </div>
+                                                            <h6>Both</h6>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-2 row">
-                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Fixed">
+                                                        <div class="choice" data-toggle="rate_radio" rel="tooltip" title="Fixed">
                                                             <input type="radio" class="form-check-input" name="rate_radio" value="Fixed">
                                                             <div class="icon">
                                                                 <img src="/img/fixed_rate.png" width="40px" style="margin-top: 10px;" />
                                                             </div>
+                                                            <h6>Fixed</h6>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-2 row">
-                                                        <div class="choice" data-toggle="proptype_radio" rel="tooltip" title="Floating">
+                                                        <div class="choice" data-toggle="rate_radio" rel="tooltip" title="Floating">
                                                             <input type="radio" class="form-check-input" name="rate_radio" value="Floating">
                                                             <div class="icon">
                                                                 <img src="/img/floating_rate.png" width="40px" style="margin-top: 10px;" />
                                                             </div>
+                                                            <h6>Floating</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -216,6 +227,7 @@
 		                                <div class="row">
                                         <div class="col-sm-10 col-sm-offset-1">
                                             <h3>Thank you for your enquiry.</h3>
+                                            <p>We have found the best deal for you.</p>
                                             <p>Your enquiry message has been sent to the selected banks below.</p>
                                             <p>We will update you with advice on the best package available soonest.</p>
                                             <p>Meanwhile, should you have any clarifications, do contact us at <code>+65 80535055</code> or email us at <a href = "mailto: atlasadvisorypl@gmail.com">atlasadvisorypl@gmail.com</a></p>

@@ -349,6 +349,13 @@ $(document).ready(function(){
         $(this).children()[0].setAttribute("checked", "true");
     });
 
+    $('[data-toggle="rate_radio"]').click(function(){
+        wizard = $(this).closest('.wizard-card');
+        wizard.find('[data-toggle="rate_radio"]').removeClass('active');
+        $(this).addClass('active');
+        $(this).children()[0].setAttribute("checked", "true");
+    });
+
     $('.set-full-height').css('height', 'auto');
 
 });
