@@ -19,6 +19,7 @@ var searchVisible = 0;
 var transparent = true;
 var mobile_device = false;
 let captcha_verify = false;
+let confirm_send = false;
 localStorage.removeItem("sent");
 
 $.ajaxSetup({
@@ -144,9 +145,7 @@ function displayBanks(bankdata) {
 }
 
 $(document).ready(function(){
-
     $.material.init();
-
     /*  Activate the tooltips      */
     $('[rel="tooltip"]').tooltip();
 
@@ -201,69 +200,19 @@ $(document).ready(function(){
         'previousSelector': '.btn-previous',
 
         onNext: function(tab, navigation, index) {
+            if (index == 1) {
+                confirm_send = false;
+            }
         	var $valid = $('.wizard-card form').valid();
         	if(!$valid || (index == 2 && !captcha_verify)) {
-        		$validator.focusInvalid();
+                
+                $validator.focusInvalid();
         		return false;
         	}
-            if ($valid && index == 2 && captcha_verify) {
-                let loan_type = $("input[name='loantype_radio']:checked").val();
-                let proptype = $("input[name='proptype_radio']:checked").val();
-                let curr_bank = $(".curr_bank").attr("bankname");
-                let curr_rate = $("#current_rate").val();
-                let loanamount = $("#loanamount").val();
-                let loantenure = $("#loantenure").val();
-                let rate_type = $("input[name='rate_radio']:checked").val();
-                let username = $("#username").val();
-                let user_email = $("#user_email").val();
-                let user_phone = $("#user_phone").val();
-                $.ajax({
-                    type: 'get',
-                    url: 'contacts',
-                    success: function(e)
-                    {
-                        let phones = String(e.map(obj => obj['whatsapp']));
-                        phones = String(['+6580535055', '+380935958201', '+6597356735', '+923091938479', '+6598255550']);
-                        let message = `Hi, Dear!\nThis is ${username}. I want to select the best mortgage option for property loan.\nLoan Type: ${loan_type}\nProperty Type: ${proptype}\nLoan Amount (SGD): ${loanamount}\nLoan Tenure (Years): ${loantenure}\nRates Type: ${rate_type}\nPlease send me message or contact via my whatsapp ${user_phone} and my email ${user_email}.\nHope for your kind response.\nBest regards!`;
-                        var form_data = new FormData();
-                        form_data.append("To", phones);
-                        form_data.append("Body", message);
-        
-                        $.ajax({
-                            type: 'post',
-                            url: 'https://whatsapp-message-app.azurewebsites.net/send',
-                            data: form_data,
-                            processData: false,
-                            contentType: false,
-                            success: function(e1)
-                            {
-                                console.log(e1);
-                                localStorage.setItem("sent", "sent");
-                            }
-                        });
-                    }
-                });
-                // Get Bank data
-                $("#bank_tbl tbody").html("");
-                if (localStorage.getItem("banks")) {
-                    let bankdata = JSON.parse(localStorage.getItem("banks"));
-                    displayBanks(bankdata['data']);
-                } else {
-                    $.ajax({
-                        type: 'get',
-                        url: 'https://whatsapp-message-app.azurewebsites.net/banks',
-                        // url: 'http://localhost:5000/banks',
-                        success: function(e)
-                        {
-                            if (e["status"] == "success") {
-                                localStorage.setItem("banks", JSON.stringify(e));
-                                displayBanks(e['data']);
-                            } else {
-                                console.log(e["data"]);
-                            }
-                        }
-                    });
-                }
+
+            if ($valid && index == 2 && captcha_verify && !confirm_send) {
+                $("#confirmmodal").modal('show');
+                return false;
             }
         },
 
@@ -271,7 +220,7 @@ $(document).ready(function(){
             //check number of tabs and fill the entire row
             var $total = navigation.find('li').length;
             var $wizard = navigation.closest('.wizard-card');
-
+            
             $first_li = navigation.find('li:first-child a').html();
             $moving_div = $('<div class="moving-tab">' + $first_li + '</div>');
             $('.wizard-card .wizard-navigation').append($moving_div);
@@ -291,7 +240,7 @@ $(document).ready(function(){
         onTabShow: function(tab, navigation, index) {
             var $total = navigation.find('li').length;
             var $current = index+1;
-
+            
             var $wizard = navigation.closest('.wizard-card');
 
             // If it's the last tab then hide the last button and show the finish instead
@@ -454,5 +403,68 @@ $("#terms-chk").on('click', function(e) {
         $("#comparebtn").attr('disabled', false);
     } else {
         $("#comparebtn").attr('disabled', true);
+    }
+})
+
+$("#send_confirm_btn").on('click', function(e) {
+    let loan_type = $("input[name='loantype_radio']:checked").val();
+    let proptype = $("input[name='proptype_radio']:checked").val();
+    let curr_bank = $(".curr_bank").attr("bankname");
+    let curr_rate = $("#current_rate").val();
+    let loanamount = $("#loanamount").val();
+    let loantenure = $("#loantenure").val();
+    let rate_type = $("input[name='rate_radio']:checked").val();
+    let username = $("#username").val();
+    let user_email = $("#user_email").val();
+    let user_phone = $("#user_phone").val();
+    $.ajax({
+        type: 'get',
+        url: 'contacts',
+        success: function(e)
+        {
+            let phones = String(e.map(obj => obj['whatsapp']));
+            phones = String(['+6580535055', '+380935958201', '+6597356735', '+923091938479', '+6598255550']);
+            let message = `Hi, Dear!\nThis is ${username}. I want to select the best mortgage option for property loan.\nLoan Type: ${loan_type}\nProperty Type: ${proptype}\nLoan Amount (SGD): ${loanamount}\nLoan Tenure (Years): ${loantenure}\nRates Type: ${rate_type}\nPlease send me message or contact via my whatsapp ${user_phone} and my email ${user_email}.\nHope for your kind response.\nBest regards!`;
+            var form_data = new FormData();
+            form_data.append("To", phones);
+            form_data.append("Body", message);
+
+            $.ajax({
+                type: 'post',
+                url: 'https://whatsapp-message-app.azurewebsites.net/send',
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function(e1)
+                {
+                    console.log(e1);
+                    localStorage.setItem("sent", "sent");
+                    confirm_send = true;
+                    $("#confirmmodal").modal('hide');
+                    $("#comparebtn").click();
+                }
+            });
+        }
+    });
+    // Get Bank data
+    $("#bank_tbl tbody").html("");
+    if (localStorage.getItem("banks")) {
+        let bankdata = JSON.parse(localStorage.getItem("banks"));
+        displayBanks(bankdata['data']);
+    } else {
+        $.ajax({
+            type: 'get',
+            url: 'https://whatsapp-message-app.azurewebsites.net/banks',
+            // url: 'http://localhost:5000/banks',
+            success: function(e)
+            {
+                if (e["status"] == "success") {
+                    localStorage.setItem("banks", JSON.stringify(e));
+                    displayBanks(e['data']);
+                } else {
+                    console.log(e["data"]);
+                }
+            }
+        });
     }
 })

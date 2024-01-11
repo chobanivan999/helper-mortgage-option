@@ -5,6 +5,26 @@
 
 	    <!--   Big container   -->
 	    <div class="container">
+            <!-- Modal -->
+            <div class="modal fade" id="confirmmodal" tabindex="-1" aria-labelledby="confirmmodallabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h3 class="modal-title fs-5" id="confirmmodallabel">Are you sure?</h3>
+                        </div>
+                        <div class="modal-body">
+                            Your information will be sent to the banks. okay?
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary" id="send_confirm_btn" style="margin-bottom: 10px;">Okay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 	        <div class="row">
 		        <div class="col-sm-10 col-sm-offset-1">
 		            <!--      Wizard container        -->
@@ -119,20 +139,20 @@
                                                     <input class="form-check-input" id="terms-chk" name="termschk" type="checkbox">
 													</span>
 													<div class="form-group label-floating">
-                                                    I consent to the collection, use and disclosure of my personal data for the purposes set in our <a href="#" id="privacy-link">Privacy Notice</a> as required by the Personal Data Protection Act 2012.
+                                                    I consent to the collection, use and disclosure of my personal data for the purposes set in our <a href="#" id="privacy-link" style="font-weight: bold; color: blue;">Privacy Notice</a> as required by the Personal Data Protection Act 2012.
 													</div>
 												</div>
 		                                	</div>
 		                            	</div>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="bankmodal" tabindex="-1" aria-labelledby="bankmodallabel" aria-hidden="true">
+                                        
+                                        <div class="modal fade" id="bankmodal" tabindex="-1" aria-labelledby="bankmodallabel" aria-hidden="true" style="z-index:1100;">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
-                                                        <h3 class="modal-title fs-5" id="bankmodallabel">Select the existing bank</h3>
+                                                        <h3 class="modal-title fs-5" id="bankmodallabel">Select your existing bank</h3>
                                                     </div>
                                                     <div class="modal-body">
                                                         <table class="table table-hover banktbl">
@@ -158,7 +178,7 @@
                                                 <div class="row" style="display: flex; justify-content: space-evenly;">
                                                     <div class="col-sm-3" style="font-weight: bold; display: flex; align-items: center;">Rate Type</div>
                                                     <div class="col-sm-2 row">
-                                                        <div class="choice" data-toggle="rate_radio" rel="tooltip" title="Both">
+                                                        <div class="choice" data-toggle="rate_radio" rel="tooltip" title="Fixed and Floating">
                                                             <input type="radio" class="form-check-input" name="rate_radio" value="Fixed and Floating">
                                                             <div class="icon">
                                                                 <img src="/img/both_rate.png" width="40px" style="margin-top: 10px;" />
@@ -200,7 +220,7 @@
 													</span>
 													<div class="form-group label-floating">
 			                                          <label class="control-label">Email</label>
-			                                          <input type="email" class="form-control" id="user_email" name="user_email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+			                                          <input type="email" class="form-control" id="user_email" name="user_email">
 			                                        </div>
 												</div>
                                                 <div class="input-group">
@@ -220,7 +240,7 @@
                                                         @endif
 			                                        </div>
 												</div>
-		                                    </div>
+		                                    </div>    
 		                                </div>
 		                            </div>
 		                            <div class="tab-pane" id="result">

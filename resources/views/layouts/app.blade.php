@@ -25,7 +25,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.png') }}">
     <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
-<body class="loanbg">
+<body>
     <div id="app">
 
         <main class="py-4 mainpart">
