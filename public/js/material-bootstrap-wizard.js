@@ -30,12 +30,14 @@ $.ajaxSetup({
 function captcha_callback(response) {
     if (response.length > 0) {
         captcha_verify = true;
+        $("#capcha_required").addClass("hide");
     }
 }
 
 // callback for captcha expired
 function expiredCallback() {
     captcha_verify = false;
+    $("#capcha_required").removeClass("hide");
 }
 
 // Choose existing bank
@@ -207,6 +209,7 @@ $(document).ready(function(){
         	if(!$valid || (index == 2 && !captcha_verify)) {
                 
                 $validator.focusInvalid();
+                $("#capcha_required").removeClass("hide");
         		return false;
         	}
 

@@ -238,6 +238,7 @@
                                                         @if ($errors->has('g-recaptcha-response'))
                                                             <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
                                                         @endif
+                                                        <span class="text-danger hide" id="capcha_required">Please verify captcha</span>
 			                                        </div>
 												</div>
 		                                    </div>    
