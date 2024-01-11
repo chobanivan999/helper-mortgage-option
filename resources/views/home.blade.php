@@ -247,10 +247,10 @@
 		                                <div class="row">
                                         <div class="col-sm-10 col-sm-offset-1">
                                             <h3>Thank you for your enquiry.</h3>
-                                            <p>We have found the best deal for you.</p>
-                                            <p>Your enquiry message has been sent to the selected banks below.</p>
+                                            <p>We've identified the best deals for you and have forwarded your enquiry to the selected banks listed below.</p>
+                                            <p>We will promptly update you with the most suitable package available.</p>
                                             <p>We will update you with advice on the best package available soonest.</p>
-                                            <p>Meanwhile, should you have any clarifications, do contact us at <code>+65 80535055</code> or email us at <a href = "mailto: atlasadvisorypl@gmail.com">atlasadvisorypl@gmail.com</a></p>
+                                            <p>In the meantime, if you require any clarifications, please feel free to contact us at <code>+65 80535055</code> or email us at <a href = "mailto: atlasadvisorypl@gmail.com">atlasadvisorypl@gmail.com</a></p>
                                             <br>
                                             <div class="mt-3 bank_tbl">
                                                 <table class="table text-center align-middle" id="bank_tbl">
